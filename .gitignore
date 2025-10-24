@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+.mypy_cache/
+
+# Virtualenv/venv
+venv/
+.venv/
+env/
+
+# Environment
+.env
+.env.*
+
+# Editor
+.vscode/
+.idea/
+*.sln
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database files
+*.sqlite3
+*.db
+
+# Build/dist
+dist/
+build/
+
+# large data (safety)
+../transparencia/
+transparencia/
+
+# ocrmypdf outputs if you keep local caches
+ocr_outputs/
