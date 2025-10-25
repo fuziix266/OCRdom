@@ -35,16 +35,17 @@ Variables de entorno (ejemplo `.env`):
 ```
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_USER=appuser
-DB_PASS=apppassword
-DB_NAME=transparencia
+DB_USER=root
+DB_PASS=
+DB_NAME=ocr
 REDIS_URL=redis://127.0.0.1:6379/0
 OCR_LANG=spa
+OCR_OUTPUT_BASE=transparencia_ocr
 ```
 
 Uso — preparar esquema:
 
-1. Conecta a MariaDB (usuario root) y crea la base `transparencia` o usa la que crea el compose.
+1. Conecta a MariaDB (usuario root) y crea la base `ocr` o usa la que cree tu entorno.
 2. Ejecuta el script SQL `mariadb_schema.sql` en la base.
 
 Scanner (poblar DB con PDFs):

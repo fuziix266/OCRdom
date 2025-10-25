@@ -24,7 +24,8 @@ DB_CONF = {
     'port': int(os.environ.get('DB_PORT', 3306)),
     'user': os.environ.get('DB_USER', 'root'),
     'password': os.environ.get('DB_PASS', ''),
-    'database': os.environ.get('DB_NAME', 'transparencia'),
+    # Cambiado: usar por defecto la base 'ocr'
+    'database': os.environ.get('DB_NAME', 'ocr'),
     'autocommit': False,
     'cursorclass': pymysql.cursors.DictCursor,
 }
@@ -41,8 +42,31 @@ def process_pdf(self, node_id, pdf_path):
             cur.execute("UPDATE pdf_metadata SET ocr_status='processing', ocr_started_at=NOW() WHERE node_id=%s", (node_id,))
             conn.commit()
 
-        # crear archivo output temporal
-        out_pdf = Path(tempfile.mkdtemp()) / (Path(pdf_path).stem + '_ocr.pdf')
+        # crear archivo output persistente replicando la estructura bajo
+        # una carpeta hermana llamada 'transparencia_ocr' (configurable)
+        OCR_OUTPUT_BASE = os.environ.get('OCR_OUTPUT_BASE', 'transparencia_ocr')
+        p = Path(pdf_path)
+        out_pdf = None
+        try:
+            parts = p.parts
+            if 'transparencia' in parts:
+                # localizar la parte 'transparencia' y recrear la misma ruta
+                idx = parts.index('transparencia')
+                # root_parent es el padre de la carpeta 'transparencia'
+                root_parent = Path(*parts[:idx]) if parts[:idx] else Path(p.anchor)
+                rel = Path(*parts[idx+1:])  # ruta relativa dentro de transparencia
+                target_base = root_parent / OCR_OUTPUT_BASE
+                target_path = target_base / rel
+                target_path.parent.mkdir(parents=True, exist_ok=True)
+                out_pdf = target_path
+            else:
+                # fallback: crear una carpeta 'transparencia_ocr' al lado del PDF
+                target_base = p.parent / OCR_OUTPUT_BASE
+                target_base.mkdir(parents=True, exist_ok=True)
+                out_pdf = target_base / p.name
+        except Exception:
+            # si algo falla, caer al temporal (menos ideal pero seguro)
+            out_pdf = Path(tempfile.mkdtemp()) / (p.stem + '_ocr.pdf')
 
         cmd = [
             'ocrmypdf',

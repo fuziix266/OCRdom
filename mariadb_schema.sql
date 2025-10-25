@@ -1,6 +1,5 @@
 -- MariaDB schema for OCR document metadata
--- Ejecutar en la base de datos 'transparencia' o ajustar nombre
-
+-- Ejecutar en la base de datos 'ocr' o ajustar nombre
 CREATE TABLE IF NOT EXISTS nodes (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   parent_id BIGINT NULL,

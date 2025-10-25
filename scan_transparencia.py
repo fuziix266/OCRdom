@@ -26,7 +26,7 @@ DB_CONF = {
     'port': int(os.environ.get('DB_PORT', 3306)),
     'user': os.environ.get('DB_USER', 'root'),
     'password': os.environ.get('DB_PASS', ''),
-    'database': os.environ.get('DB_NAME', 'transparencia'),
+    'database': os.environ.get('DB_NAME', 'ocr'),
     'autocommit': False,
     'cursorclass': pymysql.cursors.DictCursor,
 }
